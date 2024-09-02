@@ -1,0 +1,5 @@
+# Dependcey
+node_modules/
+
+# Enviroment Varibales
+.env

@@ -1,32 +1,20 @@
 // server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const helmet = require('helmet');
-const cors = require('cors');
-const dataDefinitionsRoutes = require('./routes/dataDefinitions');
-const dataListsRoutes = require('./routes/dataLists');
+const express = require("express");
+const {app} = require('./index')
+const cors = require("cors");
+const dotenv = require("dotenv");
+const { connectToDb } = require("./config/dbConnection");
 
-const app = express();
-const port = 3000;
+dotenv.config({ path: "./.env" });
 
-// Middleware
-app.use(bodyParser.json());
 // app.use(helmet());
+app.use(express.json());
 app.use(cors());
 
-
 // Connect to MongoDB
-mongoose.connect('mongodb://nour:nour@localhost:27017/data-definition-db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+connectToDb();
 
-// Use Routes
-app.use('/data-definitions', dataDefinitionsRoutes);
-app.use('/data-lists', dataListsRoutes);
-
-// listenting to server 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// listenting to server
+app.listen(process.env.PORT, () => {
+  console.log(`Server is Running!`);
 });
