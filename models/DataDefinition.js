@@ -1,9 +1,12 @@
-// models/DataDefinition.js
 const { Schema, model } = require("mongoose");
+
+const definitionSchema = new Schema({
+  defaultLanguageId: { type: String, required: true },
+  fields: { type: Array, required: true },
+}, { _id: false });
 
 const dataDefinitionSchema = new Schema(
   {
-    _id: { type: Number },
     STRUCTUREID: { type: Number },
     USERID: { type: Number },
     USERNAME: { type: String },
@@ -12,8 +15,11 @@ const dataDefinitionSchema = new Schema(
     CREATEDATE: { type: Date },
     MODIFIEDDATE: { type: Date },
     PARENTSTRUCTUREID: { type: Number },
-    NAME: { type: String },
-    DEFINITION: { type: Object },
+    NAME: { type: String, required: true },
+    DEFINITION: {
+      type : definitionSchema,
+      required: true,
+    },
   },
   { timestamps: true }
 );

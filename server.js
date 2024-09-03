@@ -8,7 +8,6 @@ const { connectToDb } = require("./config/dbConnection");
 dotenv.config({ path: "./.env" });
 
 // app.use(helmet());
-app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB

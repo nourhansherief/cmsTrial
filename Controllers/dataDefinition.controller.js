@@ -17,9 +17,8 @@ exports.getAllDataDefinitions = async (req, res) => {
 
 exports.createDataDefinitions = async (req, res) => {
   try {
-    const { name, structure } = req.body;
-    const dataDefinition = await DataDefinition.create({ name, structure });
-    res.status(200).json(dataDefinition);
+    const dataDefinition = await DataDefinition.create(req.body);
+    res.status(200).json({message : "Created Successfully!"});
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
@@ -29,7 +28,7 @@ exports.getSingleDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
     const dataDefinition = await DataDefinition.findById(id);
-    res.status(200).json({ status: "success", data: dataDefinition });
+    res.status(200).json(dataDefinition);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
@@ -48,19 +47,17 @@ exports.deleteDataDefinition = async (req, res) => {
 exports.updateDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, structure } = req.body;
+    const { NAME, DEFINITION } = req.body;
     const dataDefinition = await DataDefinition.findByIdAndUpdate(
       id,
-      { name, structure },
-      { new: true }
+      { NAME, DEFINITION},
+      { new: true, runValidators: true }
     );
-    res
-      .status(200)
-      .json({
-        status: "status",
-        message: "Updated Successfully!",
-        data: dataDefinition,
-      });
+    res.status(200).json({
+      status: "success",
+      message: "Updated Successfully!",
+      theUpdatedDataDefinition: dataDefinition,
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
