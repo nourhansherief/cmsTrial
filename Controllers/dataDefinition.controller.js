@@ -48,11 +48,16 @@ exports.updateDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
     const { NAME, DEFINITION } = req.body;
+    if(!NAME && !DEFINITION){
+      throw new Error ("Please Send NAME or DEFINITION to Update")
+    }
+
     const dataDefinition = await DataDefinition.findByIdAndUpdate(
       id,
       { NAME, DEFINITION},
       { new: true, runValidators: true }
     );
+
     res.status(200).json({
       status: "success",
       message: "Updated Successfully!",

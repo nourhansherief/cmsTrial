@@ -1,7 +1,6 @@
 const {Schema , model} = require('mongoose')
 
 const DDLRecordSetSchema = new Schema({
-    _id : {type : Number},
     UUID_ : {type : String},
     RECOREDSETID : {type : Number},
     USERNAME : {type : String},

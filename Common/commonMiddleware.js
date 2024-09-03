@@ -10,7 +10,15 @@ exports.checkIsIdValid = (model) => {
 
       next();
     } catch (error) {
-      return res.status(500).json({ error: "Internal Server Error" });
+      return res.status(400).json({ error: error.message });
     }
   };
+};
+
+exports.checkReqBody = (req, res, next) => {
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: "Please Send a Request Body!" });
+  }
+
+  next();
 };

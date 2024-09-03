@@ -8,13 +8,13 @@ router.param("id", commonMiddleware.checkIsIdValid(DataDefinition));
 
 router
   .route("/")
-  .post(dataDefinitionControllers.createDataDefinitions)
+  .post(commonMiddleware.checkReqBody , dataDefinitionControllers.createDataDefinitions)
   .get(dataDefinitionControllers.getAllDataDefinitions);
 
 router
   .route("/:id")
   .get(dataDefinitionControllers.getSingleDataDefinition)
   .delete(dataDefinitionControllers.deleteDataDefinition)
-  .put(dataDefinitionControllers.updateDataDefinition);
+  .put(commonMiddleware.checkReqBody , dataDefinitionControllers.updateDataDefinition);
 
 module.exports = router;

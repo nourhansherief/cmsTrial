@@ -8,8 +8,7 @@ const ddlRecordSetRoutes = require('./routes/dataRecordSet')
 app.use(express.json())
 
 app.use("/data-definitions", dataDefinitionsRoutes);
-app.use("/data-lists", dataListsRoutes);
 app.use("/data-record-set" , ddlRecordSetRoutes)
-
+//app.use("/data-lists", dataListsRoutes);
 
 module.exports = { app };
