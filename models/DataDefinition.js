@@ -1,9 +1,13 @@
 const { Schema, model } = require("mongoose");
+const { generateUUID } = require("../Utilities/generateUID");
 
-const definitionSchema = new Schema({
-  defaultLanguageId: { type: String, required: true },
-  fields: { type: Array, required: true },
-}, { _id: false });
+const definitionSchema = new Schema(
+  {
+    defaultLanguageId: { type: String, required: true },
+    fields: { type: Array, required: true },
+  },
+  { _id: false }
+);
 
 const dataDefinitionSchema = new Schema(
   {
@@ -17,12 +21,19 @@ const dataDefinitionSchema = new Schema(
     PARENTSTRUCTUREID: { type: Number },
     NAME: { type: String, required: true },
     DEFINITION: {
-      type : definitionSchema,
+      type: definitionSchema,
       required: true,
     },
   },
   { timestamps: true }
 );
+
+dataDefinitionSchema.pre("save", function (next) {
+  if (!this.STRUCTUREID) {
+    this.STRUCTUREID = generateUUID();
+  }
+  next();
+});
 
 const DataDefinition = model("ddmstructure", dataDefinitionSchema);
 

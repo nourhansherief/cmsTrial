@@ -1,4 +1,5 @@
 const DataDefinition = require("../models/DataDefinition");
+const { generateUUID } = require("../Utilities/generateUID");
 
 exports.getAllDataDefinitions = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ exports.getAllDataDefinitions = async (req, res) => {
 exports.createDataDefinitions = async (req, res) => {
   try {
     const dataDefinition = await DataDefinition.create(req.body);
-    res.status(200).json({message : "Created Successfully!"});
+    res.status(200).json({ message: "Created Successfully!" });
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
@@ -27,7 +28,10 @@ exports.createDataDefinitions = async (req, res) => {
 exports.getSingleDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
-    const dataDefinition = await DataDefinition.findById(id);
+    console.log(id);
+    let castedId = id.length < 24 ? { STRUCTUREID: id } : { _id: id };
+
+    const dataDefinition = await DataDefinition.find(castedId);
     res.status(200).json(dataDefinition);
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -37,7 +41,9 @@ exports.getSingleDataDefinition = async (req, res) => {
 exports.deleteDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
-    const dataDefinition = await DataDefinition.findByIdAndDelete(id);
+    const dataDefinition = await DataDefinition.findOneAndDelete({
+      STRUCTUREID: id,
+    });
     res.status(200).json({ message: "Data definition deleted successfully" });
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -48,20 +54,17 @@ exports.updateDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
     const { NAME, DEFINITION } = req.body;
-    if(!NAME && !DEFINITION){
-      throw new Error ("Please Send NAME or DEFINITION to Update")
+    if (!NAME && !DEFINITION) {
+      throw new Error("Please Send NAME or DEFINITION to Update");
     }
 
-    const dataDefinition = await DataDefinition.findByIdAndUpdate(
-      id,
-      { NAME, DEFINITION},
+    const dataDefinition = await DataDefinition.updateOne(
+      { STRUCTUREID: id },
+      { NAME, DEFINITION },
       { new: true, runValidators: true }
     );
-
     res.status(200).json({
-      status: "success",
       message: "Updated Successfully!",
-      theUpdatedDataDefinition: dataDefinition,
     });
   } catch (error) {
     res.status(404).json({ error: error.message });

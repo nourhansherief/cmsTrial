@@ -1,16 +1,25 @@
+const mongoose = require("mongoose");
+
 exports.checkIsIdValid = (model) => {
   return async (req, res, next, id) => {
     try {
-      const doc = await model.findById(id);
+      let castedId =
+        id.length < 24
+          ? { $or: [{ STRUCTUREID: id }, { RECORDSETID: id }] }
+          : { _id: id };
+
+      const doc = await model.find(castedId);
+
       if (!doc) {
         return res.status(400).json({
-          message: `Invalid ID , There is no Document With This ID : ${id}`,
+          message: `CheckIdIsValidMiddleware : Invalid ID , There is no Document With This ID : ${id}`,
         });
       }
 
       next();
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      console.log("CDs");
+      return res.status(400).json({ message: error.message });
     }
   };
 };
@@ -22,3 +31,18 @@ exports.checkReqBody = (req, res, next) => {
 
   next();
 };
+
+// exports.checkIfParamExisted = (model) => {
+//   return async (req , res , next) => {
+//     try {
+//       const args = req.body
+//       const data = await model.find(args)
+//       if(!data){
+//         return res.status(200).json({message : `Please Send These Parameters : ${args}`})
+//       }
+//       next()
+//     } catch (error) {
+//       console.log(error.message)
+//     }
+//   }
+// }

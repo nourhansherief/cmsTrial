@@ -1,17 +1,28 @@
-const {Schema , model} = require('mongoose')
+const { Schema, model } = require("mongoose");
+const { generateUUID } = require("../Utilities/generateUID");
 
-const DDLRecordSetSchema = new Schema({
-    UUID_ : {type : String},
-    RECOREDSETID : {type : Number},
-    USERNAME : {type : String},
-    CREATEDAT : {type : Date},
-    MODIFIEDDATE : {type : Date},
-    DataDefinition : { type: Schema.Types.ObjectId, ref: 'DataDefinition'},
-    NAME : {type : String},
-    VERSIONUSERID : {type : Number},
-    VERSIONUSERNAME : {type : String},
-} , {timestamps : true})
+const DDLRecordSetSchema = new Schema(
+  {
+    UUID_: { type: String },
+    RECORDSETID: { type: Number },
+    USERNAME: { type: String },
+    CREATEDAT: { type: Date },
+    MODIFIEDDATE: { type: Date },
+    DDMSTRUCTUREID: { type: Number },
+    NAME: { type: String, required: true },
+    VERSIONUSERID: { type: Number },
+    VERSIONUSERNAME: { type: String },
+  },
+  { timestamps: true }
+);
 
-const DDLRecordSet = model('ddlrecordset' , DDLRecordSetSchema)
+DDLRecordSetSchema.pre("save", function (next) {
+  if (!this.RECORDSETID) {
+    this.RECORDSETID = generateUUID();
+  }
+  next();
+});
 
-module.exports = DDLRecordSet
+const DDLRecordSet = model("ddlrecordset", DDLRecordSetSchema);
+
+module.exports = DDLRecordSet;
