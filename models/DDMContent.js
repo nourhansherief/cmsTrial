@@ -1,7 +1,22 @@
-const {Schema , model} = require('mongoose')
+const { Schema, model } = require("mongoose");
+const { generateUUID } = require("../Utilities/generateUID");
 
-const DDMContentSchema = new Schema({} , {timestamps : true})
+const DDMContentSchema = new Schema(
+  {
+    CONTENTID: { type: Number },
+    USERNAME: { type: String },
+    DATA_: { type: Object },
+  },
+  { timestamps: true }
+);
 
-const DDMContent = model('ddmcontent' , DDMContentSchema)
+DDMContentSchema.pre("save", function (next) {
+    if (!this.CONTENTID) {
+      this.CONTENTID = generateUUID();
+    }
+    next();
+  });
 
-module.exports = DDMContent
+const DDMContent = model("ddmcontent", DDMContentSchema);
+
+module.exports = DDMContent;
