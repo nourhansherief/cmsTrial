@@ -1,16 +1,36 @@
 const DDLRecordSet = require("../models/DDLRecordSet");
+const APiFeatures = require("../Common/commonApiFeatures");
 
 exports.getAllRecordSetWithDataDefinition = async (req, res) => {
   try {
-    const ddlRecordSetWithDataDefinition = await DDLRecordSet.find()
-    .populate({
-      path: "DDMSTRUCTUREID",
-      model: "ddmstructure",
-      localField: "DDMSTRUCTUREID",
-      foreignField: "STRUCTUREID",
-      justOne: true,
-      select: "STRUCTUREID NAME DEFINITION",
-    });
+    const ddlRecordSetWithDataDefinition = await DDLRecordSet.aggregate([
+      {
+        $lookup: {
+          from: "ddmstructures",
+          localField: "DDMSTRUCTUREID",
+          foreignField: "STRUCTUREID",
+          as: "data",
+        },
+      },
+      {
+        $project: {
+          RECORDSETID: 1,
+          NAME: 1,
+          DDMSTRUCTUREID: 1,
+          DataDefinition: {
+            $map: {
+              input: "$data",
+              as: "item",
+              in: {
+                STRUCTUREID: "$$item.STRUCTUREID",
+                NAME: "$$item.NAME",
+                DEFINITION: "$$item.DEFINITION",
+              },
+            },
+          },
+        },
+      },
+    ]);
 
     res.status(200).json({
       status: "success",
@@ -24,7 +44,9 @@ exports.getAllRecordSetWithDataDefinition = async (req, res) => {
 
 exports.getAllRecordSet = async (req, res) => {
   try {
-    const dataRecordSet = await DDLRecordSet.find();
+    const features = new APiFeatures(DDLRecordSet.find(), req.query);
+    const dataRecordSet = await features.pagination();
+
     res.status(200).json({
       status: "success",
       results: dataRecordSet.length,

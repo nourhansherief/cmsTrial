@@ -1,14 +1,19 @@
 const express = require("express");
-const router = express.Router()
+const router = express.Router();
 
-const DDLRecord = require("../models/DDLRecord")
-const ddlRecordController = require("../Controllers/dataRecord.controller")
-const commonMiddleware = require("../Common/commonMiddleware")
+const DDLRecord = require("../models/DDLRecord");
+const ddlRecordController = require("../Controllers/dataRecord.controller");
+const commonMiddleware = require("../Common/commonMiddleware");
 
-router.param("id" , commonMiddleware.checkIsIdValid(DDLRecord))
+router.use(commonMiddleware.checkReqBody);
 
-router.route("/").post(commonMiddleware.checkReqBody , ddlRecordController.createRecord)
+router.param("id", commonMiddleware.checkIsIdValid(DDLRecord));
 
-router.route("/:id").delete(ddlRecordController.deleteRecord)
+router.route("/").post(ddlRecordController.createRecord);
 
-module.exports = router
+router
+  .route("/:id")
+  .delete(ddlRecordController.deleteRecord)
+  .patch(ddlRecordController.updateRecord);
+
+module.exports = router;

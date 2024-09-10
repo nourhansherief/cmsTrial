@@ -1,8 +1,11 @@
 const DDMContent = require("../models/DDMContent");
+const APiFeatures = require('../Common/commonApiFeatures');
 
 exports.getAllDataContent = async (req, res) => {
   try {
-    const ddmContent = await DDMContent.find();
+    const features = new APiFeatures(DDMContent.find() , req.query)
+    const ddmContent = await features.pagination();
+
     res.status(200).json({
       status: "success",
       results: ddmContent.length,

@@ -30,7 +30,7 @@ exports.createRecord = async (req, res) => {
     };
     const ddlRecord = await DDLRecord.create(ddlRecordBody);
 
-    res.status(200).json({ message: "Record created successfully!" });
+    res.status(200).json({ message: "Record Created Successfully!" });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
@@ -47,8 +47,27 @@ exports.deleteRecord = async (req, res) => {
     // DELETE DDLRECORD
     await DDLRecord.deleteOne({ RECORDID: id });
 
-    res.status(200).json({ message: "Record deleted successfully!" });
+    res.status(200).json({ message: "Record Deleted Successfully!" });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
 };
+
+exports.updateRecord = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const ddlRecord = await DDLRecord.find({ RECORDID: id });
+
+        const {DATA_} = req.body;
+        if (!DATA_) {
+          throw new Error("Please Send Only DATA_ To Update!");
+        }
+
+        //Update DDMCONTENT
+        await DDMContent.updateOne({CONTENTID : ddlRecord[0].DDMSTORAGEID} , {DATA_})
+
+        res.status(200).json({message : "Record Updated Successfully!"})
+    } catch (error) {
+        res.status(404).json({ error: error.message });
+    }
+}

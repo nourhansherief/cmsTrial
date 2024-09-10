@@ -9,7 +9,12 @@ exports.checkIsIdValid = (model) => {
       //     : { _id: id };
 
       let castedId = {
-        $or: [{ STRUCTUREID: id }, { RECORDSETID: id }, { CONTENTID: id } , {RECORDID : id}],
+        $or: [
+          { STRUCTUREID: id },
+          { RECORDSETID: id },
+          { CONTENTID: id },
+          { RECORDID: id },
+        ],
       };
 
       const doc = await model.find(castedId);
@@ -29,24 +34,11 @@ exports.checkIsIdValid = (model) => {
 };
 
 exports.checkReqBody = (req, res, next) => {
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: "Please Send a Request Body!" });
+  if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: "Please Send a Request Body!" });
+    }
   }
 
   next();
 };
-
-// exports.checkIfParamExisted = (model) => {
-//   return async (req , res , next) => {
-//     try {
-//       const args = req.body
-//       const data = await model.find(args)
-//       if(!data){
-//         return res.status(200).json({message : `Please Send These Parameters : ${args}`})
-//       }
-//       next()
-//     } catch (error) {
-//       console.log(error.message)
-//     }
-//   }
-// }
