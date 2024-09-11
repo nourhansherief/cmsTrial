@@ -1,9 +1,12 @@
+const APiFeatures = require("../Common/commonApiFeatures");
 const DataDefinition = require("../models/DataDefinition");
 const { generateUUID } = require("../Utilities/generateUID");
 
 exports.getAllDataDefinitions = async (req, res) => {
   try {
-    const dataDefinitions = await DataDefinition.find();
+    const features = new APiFeatures(DataDefinition.find() , req.query)
+    const dataDefinitions = await features.pagination()
+
     res.status(200).json({
       status: "Success",
       results: dataDefinitions.length,
@@ -18,6 +21,11 @@ exports.getAllDataDefinitions = async (req, res) => {
 
 exports.createDataDefinitions = async (req, res) => {
   try {
+    if(!req.body.NAME || !req.body.DEFINITION || !req.body.USERNAME){
+      throw new Error("Please Send : NAME , DEFINITION and USERNAME")
+    }
+
+
     const dataDefinition = await DataDefinition.create(req.body);
     res.status(200).json({ message: "Created Successfully!" });
   } catch (err) {
@@ -54,8 +62,8 @@ exports.updateDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
     const { NAME, DEFINITION } = req.body;
-    if (!NAME && !DEFINITION) {
-      throw new Error("Please Send NAME or DEFINITION to Update");
+    if (!NAME || !DEFINITION) {
+      throw new Error("Please Send NAME and DEFINITION to Update");
     }
 
     const dataDefinition = await DataDefinition.updateOne(

@@ -3,7 +3,7 @@ const APiFeatures = require("../Common/commonApiFeatures");
 
 exports.getAllRecordSetWithDataDefinition = async (req, res) => {
   try {
-    const ddlRecordSetWithDataDefinition = await DDLRecordSet.aggregate([
+    const aggregateRecordSet = DDLRecordSet.aggregate([
       {
         $lookup: {
           from: "ddmstructures",
@@ -32,6 +32,9 @@ exports.getAllRecordSetWithDataDefinition = async (req, res) => {
       },
     ]);
 
+    const features = new APiFeatures(aggregateRecordSet , req.query)
+    const ddlRecordSetWithDataDefinition = await features.pagination()
+    
     res.status(200).json({
       status: "success",
       results: ddlRecordSetWithDataDefinition.length,
@@ -79,6 +82,9 @@ exports.updateName = async (req, res) => {
 exports.createRecordSet = async (req, res) => {
   try {
     const body = req.body;
+    if(!body.NAME || !body.DDMSTRUCTUREID || !body.USERNAME){
+      throw new Error(`Please Send All These Parameters : NAME , DDMSTRUCTUREID , USERNAME`)
+    }
     const dataRecordSet = await DDLRecordSet.create(body);
     res.status(200).json({ message: "Created Successfully!" });
   } catch (error) {
@@ -89,6 +95,7 @@ exports.createRecordSet = async (req, res) => {
 exports.getSingleRecordSet = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const recordSet = await DDLRecordSet.find({ RECORDSETID: id }).populate({
       path: "DDMSTRUCTUREID",
       model: "ddmstructure",
