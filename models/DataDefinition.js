@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { generateUUID } = require("../Utilities/generateUID");
+const convertNumToStr = require("../Utilities/convertNumtoStr");
 
 const definitionSchema = new Schema(
   {
@@ -11,7 +12,7 @@ const definitionSchema = new Schema(
 
 const dataDefinitionSchema = new Schema(
   {
-    STRUCTUREID: { type: Number },
+    STRUCTUREID: { type: String },
     USERID: { type: Number },
     USERNAME: { type: String },
     VERSIONUSERID: { type: Number },

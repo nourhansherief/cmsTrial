@@ -1,12 +1,13 @@
 const { Schema, model } = require("mongoose");
 const { generateUUID } = require("../Utilities/generateUID");
+const convertNumToStr = require("../Utilities/convertNumtoStr");
 
 const DDLRecordSchema = new Schema(
   {
-    RECORDID: { type: Number },
-    RECORDSETID: { type: Number },
+    RECORDID: { type: String },
+    RECORDSETID: { type: String },
     USERNAME: { type: String },
-    DDMSTORAGEID: { type: Number },
+    DDMSTORAGEID: { type: String },
   },
   { timestamps: true }
 );

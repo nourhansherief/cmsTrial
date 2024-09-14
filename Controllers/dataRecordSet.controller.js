@@ -1,4 +1,6 @@
 const DDLRecordSet = require("../models/DDLRecordSet");
+const DataDefinition = require("../models/DataDefinition");
+
 const APiFeatures = require("../Common/commonApiFeatures");
 
 exports.getAllRecordSetWithDataDefinition = async (req, res) => {
@@ -63,13 +65,13 @@ exports.getAllRecordSet = async (req, res) => {
 exports.updateName = async (req, res) => {
   try {
     const { id } = req.params;
-    let castedId = id.length < 24 ? { RECORDSETID: id } : { _id: id };
+    //let castedId = id.length < 24 ? { RECORDSETID: id } : { _id: id };
     const { NAME } = req.body;
     if (!NAME) {
       throw new Error("Please Send NAME to update the Document");
     }
     const updatedData = await DDLRecordSet.updateOne(
-      castedId,
+      { RECORDSETID: id },
       { $set: { NAME: NAME } },
       { new: true, runValidators: true }
     );
@@ -85,6 +87,13 @@ exports.createRecordSet = async (req, res) => {
     if(!body.NAME || !body.DDMSTRUCTUREID || !body.USERNAME){
       throw new Error(`Please Send All These Parameters : NAME , DDMSTRUCTUREID , USERNAME`)
     }
+
+    const ddmStructure = await DataDefinition.find({STRUCTUREID : body.DDMSTRUCTUREID})
+
+    if(!ddmStructure || ddmStructure.length === 0){
+      throw new Error('Please Send A Valid DDMSTRUCTUREID')
+    }
+
     const dataRecordSet = await DDLRecordSet.create(body);
     res.status(200).json({ message: "Created Successfully!" });
   } catch (error) {

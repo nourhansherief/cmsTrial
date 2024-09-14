@@ -37,9 +37,9 @@ exports.getSingleDataDefinition = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
-    let castedId = id.length < 24 ? { STRUCTUREID: id } : { _id: id };
+    //let castedId = id.length < 24 ? { STRUCTUREID: id } : { _id: id };
 
-    const dataDefinition = await DataDefinition.find(castedId);
+    const dataDefinition = await DataDefinition.find({ STRUCTUREID: id });
     res.status(200).json(dataDefinition);
   } catch (error) {
     res.status(404).json({ error: error.message });
@@ -71,6 +71,8 @@ exports.updateDataDefinition = async (req, res) => {
       { NAME, DEFINITION },
       { new: true, runValidators: true }
     );
+
+    console.log(dataDefinition)
     res.status(200).json({
       message: "Updated Successfully!",
     });

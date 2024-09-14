@@ -1,9 +1,10 @@
 const { Schema, model } = require("mongoose");
 const { generateUUID } = require("../Utilities/generateUID");
+const convertNumToStr = require("../Utilities/convertNumtoStr");
 
 const DDMContentSchema = new Schema(
   {
-    CONTENTID: { type: Number },
+    CONTENTID: { type: String },
     USERNAME: { type: String },
     DATA_: { type: Object },
   },
@@ -11,11 +12,11 @@ const DDMContentSchema = new Schema(
 );
 
 DDMContentSchema.pre("save", function (next) {
-    if (!this.CONTENTID) {
-      this.CONTENTID = generateUUID();
-    }
-    next();
-  });
+  if (!this.CONTENTID) {
+    this.CONTENTID = generateUUID();
+  }
+  next();
+});
 
 const DDMContent = model("ddmcontent", DDMContentSchema);
 

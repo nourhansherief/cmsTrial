@@ -10,10 +10,10 @@ exports.checkIsIdValid = (model) => {
 
       let castedId = {
         $or: [
-          { STRUCTUREID: parseInt(id) },
-          { RECORDSETID: parseInt(id) },
-          { CONTENTID: parseInt(id) },
-          { RECORDID: parseInt(id) },
+          { STRUCTUREID: id },
+          { RECORDSETID: id },
+          { CONTENTID: id },
+          { RECORDID: id },
         ],
       };
 
