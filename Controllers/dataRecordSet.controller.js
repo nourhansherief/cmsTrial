@@ -2,6 +2,7 @@ const DDLRecordSet = require("../models/DDLRecordSet");
 const DataDefinition = require("../models/DataDefinition");
 
 const APiFeatures = require("../Common/commonApiFeatures");
+const AppErrorHandler = require("../Common/commonErrorHandler");
 
 exports.getAllRecordSetWithDataDefinition = async (req, res) => {
   try {
@@ -47,20 +48,34 @@ exports.getAllRecordSetWithDataDefinition = async (req, res) => {
   }
 };
 
-exports.getAllRecordSet = async (req, res) => {
-  try {
-    const features = new APiFeatures(DDLRecordSet.find(), req.query);
-    const dataRecordSet = await features.pagination();
+// exports.getAllRecordSet = async (req, res) => {
+//   try {
+//     const features = new APiFeatures(DDLRecordSet.find(), req.query);
+//     const dataRecordSet = await features.pagination();
 
-    res.status(200).json({
-      status: "success",
-      results: dataRecordSet.length,
-      data: dataRecordSet,
-    });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       results: dataRecordSet.length,
+//       data: dataRecordSet,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+
+
+exports.getAllRecordSet = async (req, res , next) => {
+  const features = new APiFeatures(DDLRecordSet.find(), req.query);
+  const dataRecordSet = await features.pagination();
+
+  return res.status(200).json({
+    status: "success",
+    results: dataRecordSet.length,
+    data: dataRecordSet,
+  });
+
+  next(new AppErrorHandler('cjkdsnckjdsnc' , 400))
+}
 
 exports.updateName = async (req, res) => {
   try {
@@ -81,24 +96,26 @@ exports.updateName = async (req, res) => {
   }
 };
 
-exports.createRecordSet = async (req, res) => {
-  try {
+exports.createRecordSet = async (req, res , next) => {
+  // try {
     const body = req.body;
     if(!body.NAME || !body.DDMSTRUCTUREID || !body.USERNAME){
-      throw new Error(`Please Send All These Parameters : NAME , DDMSTRUCTUREID , USERNAME`)
+      return next(new AppErrorHandler(`Please Send All These Parameters : NAME , DDMSTRUCTUREID , USERNAME` , 404))
+      //throw new Error(`Please Send All These Parameters : NAME , DDMSTRUCTUREID , USERNAME`)
     }
 
     const ddmStructure = await DataDefinition.find({STRUCTUREID : body.DDMSTRUCTUREID})
 
     if(!ddmStructure || ddmStructure.length === 0){
-      throw new Error('Please Send A Valid DDMSTRUCTUREID')
+      return next(new AppErrorHandler(`Please Send A Valid DDMSTRUCTUREID` , 404))
+      //throw new Error('Please Send A Valid DDMSTRUCTUREID')
     }
 
     const dataRecordSet = await DDLRecordSet.create(body);
     res.status(200).json({ message: "Created Successfully!" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  // } catch (error) {
+  //   res.status(400).json({ message: error.message });
+  // }
 };
 
 exports.getSingleRecordSet = async (req, res) => {

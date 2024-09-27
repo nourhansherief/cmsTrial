@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+const swaggerSpec = require("./config/swaggerConfig");
+const swaggerUi = require('swagger-ui-express');
+
 const dataDefinitionsRoutes = require("./routes/dataDefinitions");
 const dataListRoutes = require("./routes/dataLists");
 const ddlRecordSetRoutes = require('./routes/dataRecordSet')
@@ -15,6 +18,9 @@ app.use("/data-record-set" , ddlRecordSetRoutes);
 app.use("/data-content" , ddmContentRoutes)
 app.use("/data-record" , ddlRecordRoutes)
 app.use("/data-list", dataListRoutes);
+
+// Swagger Middleware For API Docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all('*' , (req , res , next) => {
     //res.status(404).json({message : `This Route ${req.queryParam} Does Not Exist`});

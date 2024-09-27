@@ -3,9 +3,11 @@ const router = express.Router();
 const ddlRecordSetController = require("../Controllers/dataRecordSet.controller");
 const commonMiddleware = require("../Common/commonMiddleware");
 const DDLRecordSet = require("../models/DDLRecordSet");
+const {catchAsyncHandler} = require('../Utilities/catchAsync')
 
+
+router.use(commonMiddleware.checkReqBody)
 router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
-
 
 /**
  * @swagger
@@ -51,7 +53,7 @@ router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
 router
   .route("/")
   .get(ddlRecordSetController.getAllRecordSet)
-  .post(commonMiddleware.checkReqBody, ddlRecordSetController.createRecordSet);
+  .post(catchAsyncHandler(ddlRecordSetController.createRecordSet));
 
 
 /**
