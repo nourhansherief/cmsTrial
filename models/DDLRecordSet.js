@@ -1,6 +1,8 @@
 const { Schema, model } = require("mongoose");
 const { generateUUID } = require("../Utilities/generateUID");
 const convertNumToStr = require("../Utilities/convertNumtoStr");
+const validator = require("validator");
+
 
 const DDLRecordSetSchema = new Schema(
   {
@@ -10,7 +12,7 @@ const DDLRecordSetSchema = new Schema(
     CREATEDAT: { type: Date },
     MODIFIEDDATE: { type: Date },
     DDMSTRUCTUREID: { type: String },
-    NAME: { type: String, required: true },
+    NAME: { type: String, unique : true , index: true ,  required: true  },
     VERSIONUSERID: { type: Number },
     VERSIONUSERNAME: { type: String },
   },
