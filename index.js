@@ -10,8 +10,12 @@ const ddlRecordSetRoutes = require('./routes/dataRecordSet')
 const ddmContentRoutes = require("./routes/dataContent")
 const ddlRecordRoutes = require("./routes/dataRecord");
 const AppErrorHandler = require("./Common/commonErrorHandler");
+const commonMiddleware = require('./Common/commonMiddleware');
 
 app.use(express.json())
+
+// Middleware for Checking if Req Body is Empty
+app.use(commonMiddleware.checkReqBody)
 
 app.use("/data-definitions", dataDefinitionsRoutes);
 app.use("/data-record-set" , ddlRecordSetRoutes);
@@ -27,13 +31,14 @@ app.all('*' , (req , res , next) => {
     // const err = new Error(`This Route ${req.queryParam} Does Not Exist`)
     // err.statusCode = 404
     // err.status = 'fail'
-    
-    next(new AppErrorHandler(`This Route ${req.queryParam} Does Not Exist` , 404))
+
+    next(new AppErrorHandler(`This Route ${req.url} Does Not Exist` , 404))
 })
 
 app.use((err , req , res , next) => {
     err.statusCode = err.statusCode || 500
     err.status = err.status || 'error'
+    console.log(err.stack)
 
     res.status(err.statusCode).json({
         status : err.status,

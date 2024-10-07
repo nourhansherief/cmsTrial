@@ -3,10 +3,8 @@ const router = express.Router();
 const ddlRecordSetController = require("../Controllers/dataRecordSet.controller");
 const commonMiddleware = require("../Common/commonMiddleware");
 const DDLRecordSet = require("../models/DDLRecordSet");
-const {catchAsyncHandler} = require('../Utilities/catchAsync')
+const {catchAsyncHandler, catchAsyncHandlerWithId} = require('../Utilities/catchAsync')
 
-
-router.use(commonMiddleware.checkReqBody)
 router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
 
 /**
@@ -52,7 +50,7 @@ router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
 
 router
   .route("/")
-  .get(ddlRecordSetController.getAllRecordSet)
+  .get(catchAsyncHandler(ddlRecordSetController.getAllRecordSet))
   .post(catchAsyncHandler(ddlRecordSetController.createRecordSet));
 
 
@@ -82,7 +80,7 @@ router
 
 router
   .route("/datadefinition")
-  .get(ddlRecordSetController.getAllRecordSetWithDataDefinition);
+  .get(catchAsyncHandler(ddlRecordSetController.getAllRecordSetWithDataDefinition));
 
 
 /**
@@ -133,7 +131,7 @@ router
  */
 router
   .route("/:id")
-  .get(ddlRecordSetController.getSingleRecordSet)
-  .patch(commonMiddleware.checkReqBody, ddlRecordSetController.updateName);
+  .get(catchAsyncHandler(ddlRecordSetController.getSingleRecordSet))
+  .patch(catchAsyncHandler(ddlRecordSetController.updateName));
 
 module.exports = router;

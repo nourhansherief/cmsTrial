@@ -3,6 +3,7 @@ const router = express.Router();
 const ddmContentController = require("../Controllers/dataContent.controller");
 const commonMiddleware = require("../Common/commonMiddleware");
 const DDMContent = require("../models/DDMContent");
+const {catchAsyncHandler} = require('../Utilities/catchAsync')
 
 router.param("id", commonMiddleware.checkIsIdValid(DDMContent));
 
@@ -30,7 +31,7 @@ router.param("id", commonMiddleware.checkIsIdValid(DDMContent));
  *       400:
  *          description: Failed to fetch all Contents.
  */
-router.route("/").get(ddmContentController.getAllDataContent);
+router.route("/").get(catchAsyncHandler(ddmContentController.getAllDataContent));
 
 
 /**
@@ -80,7 +81,7 @@ router.route("/").get(ddmContentController.getAllDataContent);
  */
 router
   .route("/:id")
-  .get(ddmContentController.getSingleDataContent)
-  .patch(commonMiddleware.checkReqBody, ddmContentController.updateDataContent);
+  .get(catchAsyncHandler(ddmContentController.getSingleDataContent))
+  .patch(catchAsyncHandler(ddmContentController.updateDataContent));
 
 module.exports = router;

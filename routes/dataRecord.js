@@ -4,8 +4,8 @@ const router = express.Router();
 const DDLRecord = require("../models/DDLRecord");
 const ddlRecordController = require("../Controllers/dataRecord.controller");
 const commonMiddleware = require("../Common/commonMiddleware");
+const {catchAsyncHandler} = require('../Utilities/catchAsync')
 
-router.use(commonMiddleware.checkReqBody);
 
 router.param("id", commonMiddleware.checkIsIdValid(DDLRecord));
 
@@ -40,7 +40,7 @@ router.param("id", commonMiddleware.checkIsIdValid(DDLRecord));
  *       400:
  *          description: Failed to create RecordSets.
  */
-router.route("/").post(ddlRecordController.createRecord);
+router.route("/").post(catchAsyncHandler(ddlRecordController.createRecord));
 
 
 
@@ -92,7 +92,7 @@ router.route("/").post(ddlRecordController.createRecord);
  */
 router
   .route("/:id")
-  .delete(ddlRecordController.deleteRecord)
-  .patch(ddlRecordController.updateRecord);
+  .delete(catchAsyncHandler(ddlRecordController.deleteRecord))
+  .patch(catchAsyncHandler(ddlRecordController.updateRecord));
 
 module.exports = router;

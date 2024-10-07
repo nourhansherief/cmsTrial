@@ -4,9 +4,9 @@ const router = express.Router();
 const commonMiddleware = require("../Common/commonMiddleware");
 const dataListController = require("../Controllers/dataList.controller")
 const DDLRecordSet = require("../models/DDLRecordSet")
+const {catchAsyncHandler} = require('../Utilities/catchAsync')
 
 router.param("id" , commonMiddleware.checkIsIdValid(DDLRecordSet))
-
 
 
 /**
@@ -32,7 +32,7 @@ router.param("id" , commonMiddleware.checkIsIdValid(DDLRecordSet))
  *       400:
  *          description: Failed to fetch.
  */
-router.route("/").get(dataListController.getAllDataList)
+router.route("/").get(catchAsyncHandler(dataListController.getAllDataList))
 
 
 /**
@@ -55,6 +55,6 @@ router.route("/").get(dataListController.getAllDataList)
  *              400:
  *                description: Failed to Delete.
  */
-router.route("/:id").delete(dataListController.deleteDataList)
+router.route("/:id").delete(catchAsyncHandler(dataListController.deleteDataList))
 
 module.exports = router;

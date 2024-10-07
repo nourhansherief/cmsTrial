@@ -3,11 +3,9 @@ const router = express.Router();
 const DataDefinition = require("../models/DataDefinition");
 const dataDefinitionControllers = require("../Controllers/dataDefinition.controller");
 const commonMiddleware = require("../Common/commonMiddleware");
+const {catchAsyncHandler} = require('../Utilities/catchAsync')
 
-router.use(commonMiddleware.checkReqBody)
 router.param("id", commonMiddleware.checkIsIdValid(DataDefinition));
-
-
 
 /**
  * @swagger
@@ -60,8 +58,8 @@ router.param("id", commonMiddleware.checkIsIdValid(DataDefinition));
  */
 router
   .route("/")
-  .post(dataDefinitionControllers.createDataDefinitions)
-  .get(dataDefinitionControllers.getAllDataDefinitions);
+  .post(catchAsyncHandler(dataDefinitionControllers.createDataDefinitions))
+  .get(catchAsyncHandler(dataDefinitionControllers.getAllDataDefinitions));
 
 
 /**
@@ -130,8 +128,8 @@ router
  */
 router
   .route("/:id")
-  .get(dataDefinitionControllers.getSingleDataDefinition)
-  .delete(dataDefinitionControllers.deleteDataDefinition)
-  .patch(dataDefinitionControllers.updateDataDefinition);
+  .get(catchAsyncHandler(dataDefinitionControllers.getSingleDataDefinition))
+  .delete(catchAsyncHandler(dataDefinitionControllers.deleteDataDefinition))
+  .patch(catchAsyncHandler(dataDefinitionControllers.updateDataDefinition));
 
 module.exports = router;

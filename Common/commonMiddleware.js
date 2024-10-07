@@ -20,7 +20,7 @@ exports.checkIsIdValid = (model) => {
     if (!doc || doc.length === 0) {
       return next(
         new AppErrorHandler(
-          `CheckIdIsValidMiddleware : Invalid ID , There is no Document With This ID : ${id}`,
+          `Invalid ID , There is no Document With This ID : ${id}`,
           400
         )
       );
