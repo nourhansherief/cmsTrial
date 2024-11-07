@@ -6,6 +6,7 @@ const DDLRECORD = require("../models/DDLRecord");
 const DDLRecordSet = require("../models/DDLRecordSet");
 
 const APiFeatures = require("../Common/commonApiFeatures");
+const DataDefinition = require("../models/DataDefinition");
 
 exports.getAllDataList = async (req, res, next) => {
   const aggregateQuery = DDLRecordSet.aggregate([
@@ -64,4 +65,29 @@ exports.deleteDataList = async (req, res, next) => {
   await DDLRecordSet.deleteOne({ RECORDSETID: id });
 
   res.status(200).json({ message: "Data List Deleted Successfully!" });
+};
+
+exports.getSingleDataList = async (req, res, next) => {
+  const { id } = req.params;
+
+  const ddlRecords = await DDLRECORD.find({ RECORDSETID: id });
+
+  const ddmContents = ddlRecords.map((record) => record.DDMSTORAGEID);
+
+  const ddmContentValues = await DDMCONTENT.find({
+    CONTENTID: { $in: ddmContents },
+  });
+
+  const records = ddlRecords.map((record) => {
+    return {
+      record,
+      content: ddmContentValues
+        .map((content) =>
+          content.CONTENTID == record.DDMSTORAGEID ? content : null
+        )
+        .filter((value) => value),
+    };
+  });
+
+  res.status(200).json({ records : records });
 };
