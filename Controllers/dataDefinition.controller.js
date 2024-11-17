@@ -1,10 +1,87 @@
 const APiFeatures = require("../Common/commonApiFeatures");
 const AppErrorHandler = require("../Common/commonErrorHandler");
 const DataDefinition = require("../models/DataDefinition");
+const {updateDataDefinition} = require("../Utilities/updateDataDefinition")
+
 
 exports.getAllDataDefinitions = async (req, res) => {
+  // await DataDefinition.updateMany(
+  //   {}, // Apply to all documents or specify a filter here
+  //   [
+  //     {
+  //       $set: {
+  //         "DEFINITION.fields": {
+  //           $map: {
+  //             input: "$DEFINITION.fields",
+  //             as: "field",
+  //             in: {
+  //               // Set `label` and `key` based on the field name
+  //               label: "$$field.name",
+  //               name : "$$field.name",
+  //               key: "$$field.name",
+  //               defaultValue: "$$field.predefinedValue.en_US",
+  //               defaultValueAr: "$$field.predefinedValue.ar_SA",
+  //               //data : "$$field.options",
+  //               type: {
+  //                 $switch: {
+  //                   branches: [
+  //                     {
+  //                       case: { $eq: ["$$field.type", "text"] },
+  //                       then: "textfield",
+  //                     },
+  //                     {
+  //                       case: { $eq: ["$$field.type", "textarea"] },
+  //                       then: "textarea",
+  //                     },
+  //                     {
+  //                       case: {
+  //                         $or: [
+  //                           { $eq: ["$$field.type", "ddm-number"] },
+  //                           { $eq: ["$$field.type", "ddm-integer"] },
+  //                         ],
+  //                       },
+  //                       then: "number",
+  //                     },
+  //                     // {
+  //                     //   case : {
+  //                     //     $eq: ["$$field.type" , "select"]
+  //                     //   },
+  //                     //   then : {
+  //                     //     data : "$$field.options"
+  //                     //   }
+  //                     // }
+  //                   ],
+  //                   default: "$$field.type", // Fallback to original type if not matched
+  //                 },
+  //               },
+  //               // Set other properties, such as defaultValue and validation
+
+
+  //               validate: {
+  //                 required: "$$field.required", // Fallback to false if undefined
+  //               },
+  //               required : "$$field.required",
+  //               applyMaskOn: "change",
+  //               autoExpand: false,
+  //               tableView: true,
+  //               input: true,
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ]
+  // );
+
+  console.log("Done!");
+
   const features = new APiFeatures(DataDefinition.find(), req.query);
   const dataDefinitions = await features.pagination();
+  //   //Update documents in the collection
+  // const updatedData = updateDataDefinition(dataDefinitions)
+  //   for (const doc of updatedData) {
+  //     await DataDefinition.updateOne({ STRUCTUREID: doc.STRUCTUREID}, doc);
+  //   }
 
   res.status(200).json({
     status: "Success",
