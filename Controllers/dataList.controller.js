@@ -9,36 +9,38 @@ const APiFeatures = require("../Common/commonApiFeatures");
 const DataDefinition = require("../models/DataDefinition");
 
 exports.getAllDataList = async (req, res, next) => {
-  const aggregateQuery = DDLRecordSet.aggregate([
-    {
-      $lookup: {
-        from: "ddlrecords",
-        localField: "RECORDSETID",
-        foreignField: "RECORDSETID",
-        as: "records",
-      },
-    },
-    {
-      $lookup: {
-        from: "ddmcontents",
-        localField: "records.DDMSTORAGEID",
-        foreignField: "CONTENTID",
-        as: "content",
-      },
-    },
-    {
-      $project: {
-        RECORDSETID: 1,
-        NAME: 1,
-        DDMSTRUCTUREID: 1,
-        records: 1,
-        content: 1,
-      },
-    },
-  ]);
+  // In-Case you need all the Datalist with it's content
 
-  const features = new APiFeatures(aggregateQuery, req.query);
-  const ddlRecordSet = await features.pagination();
+  // const aggregateQuery = DDLRecordSet.aggregate([
+  //   {
+  //     $lookup: {
+  //       from: "ddlrecords",
+  //       localField: "RECORDSETID",
+  //       foreignField: "RECORDSETID",
+  //       as: "records",
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "ddmcontents",
+  //       localField: "records.DDMSTORAGEID",
+  //       foreignField: "CONTENTID",
+  //       as: "content",
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       RECORDSETID: 1,
+  //       NAME: 1,
+  //       DDMSTRUCTUREID: 1,
+  //       records: 1,
+  //       content: 1,
+  //     },
+  //   },
+  // ]);
+
+  const features = new APiFeatures(DDLRecordSet.find() , req.query);
+  const ddlRecordSet = await features.pagination().search().query;
 
   res.status(200).json({
     status: "success",

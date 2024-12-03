@@ -9,9 +9,10 @@ const updateDataDefinition = (data) => {
         fields: df.DEFINITION.fields.map((field) => {
           return {
             label: field.name,
+            key: field.name,
             type: convertType(field.type),
-            defaultValue: field.predefinedValue.en_US,
-            defaultValueAr: field.predefinedValue.ar_SA,
+            defaultValue: field.predefinedValue?.en_US,
+            defaultValueAr: field.predefinedValue?.ar_SA,
             validate: { required: field.required },
             applyMaskOn: "change",
             autoExpand: false,

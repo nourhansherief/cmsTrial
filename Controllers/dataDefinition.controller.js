@@ -73,10 +73,8 @@ exports.getAllDataDefinitions = async (req, res) => {
   //   ]
   // );
 
-  console.log("Done!");
-
   const features = new APiFeatures(DataDefinition.find(), req.query);
-  const dataDefinitions = await features.pagination();
+  const dataDefinitions = await features.pagination().search().query;
   //   //Update documents in the collection
   // const updatedData = updateDataDefinition(dataDefinitions)
   //   for (const doc of updatedData) {

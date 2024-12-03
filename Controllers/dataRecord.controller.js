@@ -50,7 +50,7 @@ exports.deleteRecord = async (req, res, next) => {
   res.status(200).json({ message: "Record Deleted Successfully!" });
 };
 
-exports.updateRecord = async (req, res , next) => {
+exports.updateRecord = async (req, res, next) => {
   const { id } = req.params;
   const ddlRecord = await DDLRecord.find({ RECORDID: id });
 
@@ -66,4 +66,24 @@ exports.updateRecord = async (req, res , next) => {
   );
 
   res.status(200).json({ message: "Record Updated Successfully!" });
+};
+
+exports.getRecord = async (req, res, next) => {
+  // Get the RECORDID From Url
+  const { id } = req.params;
+  // Fetch The Record
+  const ddlRecord = await DDLRecord.find({ RECORDID: id });
+
+  // Fetch The Content By DDMSTORAGEID
+  let ddlContent = await DDMContent.find({
+    CONTENTID: ddlRecord[0].DDMSTORAGEID,
+  });
+
+  ddlContent = ddlContent.map((content) => {
+    content = content.toObject();
+    content.RECORDSETID = ddlRecord[0].RECORDSETID;
+    return content;
+  });
+  // Return the Data
+  res.status(200).json(ddlContent);
 };

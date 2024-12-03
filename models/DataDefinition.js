@@ -20,7 +20,7 @@ const dataDefinitionSchema = new Schema(
     CREATEDATE: { type: Date },
     MODIFIEDDATE: { type: Date },
     PARENTSTRUCTUREID: { type: Number },
-    NAME: { type: String, required: true },
+    NAME: { type: String, required: true , index : true},
     DEFINITION: {
       type: definitionSchema,
       required: true,

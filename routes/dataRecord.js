@@ -92,6 +92,7 @@ router.route("/").post(catchAsyncHandler(ddlRecordController.createRecord));
  */
 router
   .route("/:id")
+  .get(catchAsyncHandler(ddlRecordController.getRecord))
   .delete(catchAsyncHandler(ddlRecordController.deleteRecord))
   .patch(catchAsyncHandler(ddlRecordController.updateRecord));
 
