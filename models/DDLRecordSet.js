@@ -12,7 +12,7 @@ const DDLRecordSetSchema = new Schema(
     CREATEDAT: { type: Date },
     MODIFIEDDATE: { type: Date },
     DDMSTRUCTUREID: { type: String },
-    NAME: { type: String, unique : true , index: true ,  required: true  },
+    NAME: { type: String,  index: true ,  required: true  },
     VERSIONUSERID: { type: Number },
     VERSIONUSERNAME: { type: String },
   },
