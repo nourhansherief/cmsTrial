@@ -6,8 +6,8 @@ const DDLRecordSchema = new Schema(
   {
     RECORDID: { type: String },
     RECORDSETID: { type: String },
-    USERNAME: { type: String },
     DDMSTORAGEID: { type: String },
+    USERNAME: { type: String },
   },
   { timestamps: true }
 );

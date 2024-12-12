@@ -1,9 +1,14 @@
 const { Schema, model } = require("mongoose");
 const { generateUUID } = require("../Utilities/generateUID");
 const convertNumToStr = require("../Utilities/convertNumtoStr");
+const {convertXmlNameToJson} = require('../Utilities/convertXmlNameToJson')
+const {convertToJson} = require('../Utilities/convertToJson')
+
 
 const definitionSchema = new Schema(
   {
+    availableLanguageIds : { type : Array , required : false},
+    successPage : { type : Object , required : false},
     defaultLanguageId: { type: String, required: true },
     fields: { type: Array, required: true },
   },
@@ -20,9 +25,10 @@ const dataDefinitionSchema = new Schema(
     CREATEDATE: { type: Date },
     MODIFIEDDATE: { type: Date },
     PARENTSTRUCTUREID: { type: Number },
-    NAME: { type: String, required: true , index : true},
+    NAME: { type: String},
     DEFINITION: {
-      type: definitionSchema,
+      //type: Schema.Types.Mixed,
+      type : definitionSchema,
       required: true,
     },
   },
@@ -37,5 +43,11 @@ dataDefinitionSchema.pre("save", function (next) {
 });
 
 const DataDefinition = model("ddmstructure", dataDefinitionSchema);
+
+//convertToJson(DataDefinition , 'DEFINITION')
+
+//convertXmlNameToJson(DataDefinition)
+
+//convertNumToStr(DataDefinition , 'STRUCTUREID')
 
 module.exports = DataDefinition;

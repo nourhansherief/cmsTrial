@@ -33,6 +33,7 @@ router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
  */
 router.route("/").get(catchAsyncHandler(dataListController.getAllDataList));
 
+router.route("/webContentApi/:prefix").get(catchAsyncHandler(dataListController.getWebContent))
 /**
  * @swagger
  * /data-list/{RECORDSETID}:
