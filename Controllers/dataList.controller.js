@@ -8,6 +8,8 @@ const DDLRecordSet = require("../models/DDLRecordSet");
 const APiFeatures = require("../Common/commonApiFeatures");
 const DataDefinition = require("../models/DataDefinition");
 const webContentApiStructure = require("../Utilities/webContentApiStructure");
+const appContentStructure = require("../Utilities/appContentApiStructure")
+const {clearCachedData} = require("../Common/cacheMiddleware")
 
 exports.getAllDataList = async (req, res, next) => {
   // In-Case you need all the Datalist with it's content
@@ -125,3 +127,39 @@ exports.getWebContent = async (req, res, next) => {
 
   res.status(200).json(webContentApiStructure(webPageName, lang, obj));
 };
+
+exports.getAppContent = async (req , res , next) => {
+  const { prefix } = req.params;
+  const { ratePlan , type , id , date } = req.query;
+
+  const appPageName = prefix.split("_")[1];
+
+  //let regex = new RegExp(prefix, "i");
+
+  const dataLists = await DDLRecordSet.find({ NAME: prefix });
+
+  const records = await DDLRECORD.find({
+    RECORDSETID: dataLists.map((record) => {
+      return record.RECORDSETID;
+    }),
+  });
+
+  const contents = await DDMCONTENT.find({
+    CONTENTID: records.map((record) => {
+      return record.DDMSTORAGEID;
+    }),
+  });
+
+  let obj = {
+    dataLists,
+    records,
+    contents,
+  };
+
+  res.status(200).json(appContentStructure(appPageName , ratePlan , id , obj))
+}
+
+exports.clearCache = (req , res , next) => {
+  clearCachedData(req.originalUrl)
+  res.status(200).json("Cached Data Deleted Successfully!")
+}

@@ -5,6 +5,10 @@ const commonMiddleware = require("../Common/commonMiddleware");
 const dataListController = require("../Controllers/dataList.controller");
 const DDLRecordSet = require("../models/DDLRecordSet");
 const { catchAsyncHandler } = require("../Utilities/catchAsync");
+const {
+  cacheResponses,
+  clearCachedData,
+} = require("../Common/cacheMiddleware");
 
 router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
 
@@ -33,7 +37,15 @@ router.param("id", commonMiddleware.checkIsIdValid(DDLRecordSet));
  */
 router.route("/").get(catchAsyncHandler(dataListController.getAllDataList));
 
-router.route("/webContentApi/:prefix").get(catchAsyncHandler(dataListController.getWebContent))
+router
+  .route("/webContentApi/:prefix")
+  .get(cacheResponses, catchAsyncHandler(dataListController.getWebContent))
+  .delete(dataListController.clearCache);
+
+router
+  .route("/appContentApi/:prefix")
+  .get(catchAsyncHandler(dataListController.getAppContent));
+
 /**
  * @swagger
  * /data-list/{RECORDSETID}:
@@ -57,6 +69,6 @@ router.route("/webContentApi/:prefix").get(catchAsyncHandler(dataListController.
 router
   .route("/:id")
   .get(catchAsyncHandler(dataListController.getSingleDataList))
-  .delete(catchAsyncHandler(dataListController.deleteDataList))
+  .delete(catchAsyncHandler(dataListController.deleteDataList));
 
 module.exports = router;
