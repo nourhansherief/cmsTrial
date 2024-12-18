@@ -105,7 +105,7 @@ exports.getSingleRecordSet = async (req, res) => {
     localField: "DDMSTRUCTUREID",
     foreignField: "STRUCTUREID",
     justOne: true,
-    select: "STRUCTUREID NAME DEFINITION",
+    select: "STRUCTUREID NAME DEFINITION PARENTSTRUCTUREID",
   });
 
   res.status(200).json(recordSet);

@@ -44,7 +44,8 @@ router
 
 router
   .route("/appContentApi/:prefix")
-  .get(catchAsyncHandler(dataListController.getAppContent));
+  .get(cacheResponses , catchAsyncHandler(dataListController.getAppContent))
+  .delete(dataListController.clearCache);
 
 /**
  * @swagger

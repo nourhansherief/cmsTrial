@@ -20,8 +20,9 @@ const cacheResponses = (req, res, next) => {
 const clearCachedData = (url) => {
   if (url !== "all") {
     myCache.del(url);
+  } else {
+    return myCache.flushAll();
   }
-  return myCache.flushAll();
 };
 
 module.exports = { cacheResponses, clearCachedData };
